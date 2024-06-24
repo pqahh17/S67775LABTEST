@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <title>Staff Directory</title>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <style>
+      body {
+         font-family: Arial, Helvetica, sans-serif;
+      }
+      header {
+         background-color: #dedfdb;
+         padding: 5px;
+         text-align: left;
+         font-size: 18px;
+         color: black;
+      }
+      footer {
+         background-color: #dedfdb;
+         padding: 10px;
+         text-align: left;
+         color: black;
+         position: fixed;
+         bottom: 0;
+         width: 100%;
+      }
+   </style>
+</head>
+<body>
+   <header>
+      <h2>CSM3052</h2>
+   </header>
+   <div class="container mt-5">
+      <h2>List of Staff</h2>
+      <ul id="staffList" class="list-group mt-3"></ul>
+   </div>
+
+   <footer>
+      <p>Front End Programming &copy;2024</p>
+   </footer>
+
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script>
+      $(document).ready(function () {
+         // Ajax call to retrieve staff data
+         $.ajax({
+            url: "https://kerbau.odaje.biz/getstaff.php",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+               // Process each staff member's data
+               data.forEach(function (staffJson) {
+                  let staff = JSON.parse(staffJson);
+                  // Display only email in the list
+                  $('#staffList').append(`<li class="list-group-item"><a href="secondpage.html?id=${staff.employeeNumber}">${staff.email}</a></li>`);
+               });
+            },
+            error: function () {
+               console.error("Failed to retrieve staff data.");
+            }
+         });
+      });
+   </script>
+</body>
+</html>

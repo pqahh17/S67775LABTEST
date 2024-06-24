@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Employee Details</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        header {
+            background-color: #dedfdb;
+            padding: 5px;
+            text-align: left;
+            font-size: 18px;
+            color: black;
+        }
+        footer {
+            background-color: #dedfdb;
+            padding: 10px;
+            text-align: left;
+            color: black;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>CSM3052</h2>
+    </header>
+    <div class="container mt-5">
+        <div id="employeeDetails" class="mt-3">
+            <!-- Employee details will be dynamically added here -->
+        </div>
+    </div>
+
+    <footer>
+        <p>Front End Programming &copy;2024</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Extract employeeNumber from URL query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const employeeNumber = urlParams.get('id');
+
+            // Make AJAX call to get employee details by employeeNumber
+            $.ajax({
+                url: `https://kerbau.odaje.biz/getstaffbyid.php?id=${employeeNumber}`,
+                method: "GET",
+                dataType: "json",
+                success: function(data) {
+                    // Check the status of the response
+                    let status = JSON.parse(data[0]).status;
+                    if (status === 1) {
+                        // Employee details found
+                        let employeeData = JSON.parse(data[1]);
+                        // Display employee details
+                        $('#employeeDetails').html(`
+                            <p><strong>Name:</strong> ${employeeData.firstName} ${employeeData.lastName}</p>
+                            <p><strong>Email:</strong> ${employeeData.email}</p>
+                            <p><strong>Office Code:</strong> ${employeeData.officeCode}</p>
+                            <p><strong>Extension:</strong> ${employeeData.extension}</p>
+                            <p><strong>Job Title:</strong> ${employeeData.jobTitle}</p>
+                            <p><strong>Reports To:</strong> ${employeeData.reportsTo || 'N/A'}</p>
+                        `);
+                    } else {
+                        // No data found
+                        $('#employeeDetails').html('<p>Employee data not found.</p>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Failed to retrieve employee details:", status, error);
+                    $('#employeeDetails').html('<p>Error fetching employee details.</p>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
